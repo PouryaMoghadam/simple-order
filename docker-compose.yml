@@ -1,0 +1,74 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: registry.docker.ir/library/postgres:13
+    restart: always
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    environment:
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -h ${POSTGRES_HOST} -p ${POSTGRES_PORT}" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  redis:
+    image: registry.docker.ir/library/redis:7.0.5
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+    command: redis-server --bind ${REDIS_HOST} --port ${REDIS_PORT}
+    volumes:
+      - redis_data:/data
+
+
+  #  django:
+  #    build:
+  #      context: .
+  #      dockerfile: scripts/local.Dockerfile
+  #    command: bash -c "python manage.py migrate && python manage.py runserver ${HOST}:${PORT}"
+  #    volumes:
+  #      - .:/app
+  #    ports:
+  #      - ${PORT}:${PORT}
+  #    depends_on:
+  #      - postgres
+  #      - redis
+  #    env_file:
+  #      - .env
+  #    restart: on-failure
+
+  # celery:
+  #   build:
+  #     context: .
+  #     dockerfile: scripts/local.Dockerfile
+  #   command: celery -A mithra.tasks worker -l info --without-gossip --without-mingle --without-heartbeat
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - .:/app
+  #   restart: on-failure
+
+  # beats:
+  #   build:
+  #     context: .
+  #     dockerfile: scripts/local.Dockerfile
+  #   command: celery -A mithra.tasks beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - .:/app
+  #   restart: on-failure
+
+
+volumes:
+  postgres_data:
+  redis_data:
