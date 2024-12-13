@@ -16,7 +16,6 @@ import dotenv
 from django.utils import timezone
 
 BASE_DIR = os.getcwd()
-APPS_DIR = BASE_DIR + "/src"
 
 dotenv.load_dotenv(BASE_DIR + "/.env")
 
