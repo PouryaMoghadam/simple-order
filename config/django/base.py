@@ -29,7 +29,7 @@ ALLOWED_HOSTS = ["*"]
 
 # Application definition
 LOCAL_APPS = [
-    # "src.core.apps.CoreConfig",
+    "src.coin.apps.CoinConfig",
     # "src.user.apps.UserConfig",
     # "src.wallet.apps.WalletConfig",
     # "src.order.apps.OrderConfig",
@@ -40,6 +40,7 @@ THIRD_PARTY_APPS = [
     "django_celery_beat",
     "corsheaders",
     "django_jalali",
+    "django_extensions",
 ]
 
 INSTALLED_APPS = [
@@ -143,7 +144,10 @@ timezone.activate(TIME_ZONE)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = "/media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
